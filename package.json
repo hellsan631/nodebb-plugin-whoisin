@@ -1,11 +1,11 @@
 {
   "name": "nodebb-plugin-whoisin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A NodeBB plugin to embed a button to RSVP whenever someone asks \"Who is in?\"",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/modlab/nodebb-plugin-whoisin"
+    "url": "https://github.com/modlabca/nodebb-plugin-whoisin"
   },
   "keywords": [
     "nodebb",
@@ -21,7 +21,7 @@
   },
   "license": "GPLv3",
   "bugs": {
-    "url": "https://github.com/modlab/nodebb-plugin-whoisin/issues"
+    "url": "https://github.com/modlabca/nodebb-plugin-whoisin/issues"
   },
   "readmeFilename": "README.md"
 }
