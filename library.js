@@ -119,6 +119,36 @@ whoisin.load = function(socket, data, callback) {
 				// 	whoisin_data.users[user.uid][prop] = user[prop];
 				// }
 			}
+			
+			// sort users
+			whoisin_data.users.sort(function(a,b){
+				var an = new Date(a.timestamp),
+				bn = new Date(b.timestamp);
+				
+				if(an > bn) {
+					return 1;
+				}
+				if(an < bn) {
+					return -1;
+				}
+				return 0;
+			});
+			
+			// put the current user in front
+			
+			whoisin_data.users.sort(function(a,b){
+				a = a.uid;
+				b = b.uid;
+				
+				if(a == socket.uid){
+					return 1;
+				}
+				if(b == socket.uid){
+					return -1;
+				}
+				return 0;
+			});
+			
 			callback(null, whoisin_data);
 		});
 	});
