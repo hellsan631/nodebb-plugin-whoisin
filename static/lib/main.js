@@ -14,9 +14,9 @@
 					var user = whoisin_data.users[i];
 					if (user.isin) {
 						participantsDiv.append(
-							'<a href="/user/' + user.username + '">' +
-							'<img data-original-title="' + user.userslug + '" src="' +
-							user.picture + '" alt="' + user.slug + '" class="whoisin-avatar"' +
+							'<a href="/user/' + user.userslug + '">' +
+							'<img data-original-title="' + user.username + '" src="' +
+							user.picture + '" alt="' + user.username + '" class="whoisin-avatar"' +
 							' title=""></a>');
 					}
 				}
