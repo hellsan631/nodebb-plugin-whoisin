@@ -118,6 +118,7 @@ whoisin.load = function(socket, data, callback) {
 				user = users_data[id];
 				whoisin_data.users[user.uid].userslug = user.userslug;
 				whoisin_data.users[user.uid].picture = user.picture;
+				whoisin_data.users[user.uid].username = user.username;
 				// for (var prop in user) {
 				// 	whoisin_data.users[user.uid][prop] = user[prop];
 				// }
