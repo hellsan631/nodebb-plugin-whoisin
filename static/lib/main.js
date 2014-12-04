@@ -10,8 +10,8 @@
 			}, function(err, whoisin_data) {
 				var participantsDiv = $('div.participants');
 				participantsDiv.html('');
-				for (var id in whoisin_data.users) {
-					var user = whoisin_data.users[id]
+				for (var i = 0; i < whoisin_data.users.length; i++) {
+					var user = whoisin_data.users[i];
 					if (user.isin) {
 						participantsDiv.append(
 							'<a href="/user/' + user.username + '">' +
