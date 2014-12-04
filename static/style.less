@@ -1,11 +1,22 @@
-.randomColor(){
-	@randomColor: `Math.floor(Math.random()*16777215).toString(16)`;
-	@colorHex: e(@randomColor);
-	@color: ~"#@{colorHex}";
-}
-// TODO: remove random color bg when plugin is finished
-// will set new color every time nodebb restarts
-body {
-.randomColor();
-  background-color: @color;
+div.whoisin {
+	div.participants {
+		float: left;
+		img.whoisin-avatar {
+			width: 5rem;
+			height: 5rem;
+		}
+	}
+	div.whoisin-btn-wrapper, button.iamin, button.iamnotin {
+		transition-property: opacity, height;
+		transition-duration: 400ms, 400ms;
+		height: 5rem;
+		opacity: 1;
+		float: left;
+	}
+	div.whoisin-btn-wrapper button.hidden {
+		transition-property: opacity, height;
+  	transition-duration: 400ms, 400ms;
+		height: 0;
+		opacity: 0;
+	}
 }
