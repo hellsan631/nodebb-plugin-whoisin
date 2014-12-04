@@ -22,7 +22,7 @@ var whoisin = {},
 		'	</div>' +
 		'</div>' +
 		'<br />',
-          idInput = '<input type="hidden" class="whoisin-id" style="display:none;" value="{{id}}" />';
+		  idInput = '<input type="hidden" class="whoisin-id" style="display:none;" value="{{id}}" />';
 
 whoisin.init = function(app, middleware, controllers, callback) {
 	console.log('nodebb-plugin-whoisin: loaded');
@@ -111,8 +111,11 @@ whoisin.load = function(socket, data, callback) {
 		}
 		user.getMultipleUserFields(users_array, ['username', 'userslug', 'picture', 'uid'], function(err, users_data) {
 			// Add user data to whoisin data
+			
+			var sortable = [], user;
+			
 			for (var id in users_data) {
-				var user = users_data[id];
+				user = users_data[id];
 				whoisin_data.users[user.uid].userslug = user.userslug;
 				whoisin_data.users[user.uid].picture = user.picture;
 				// for (var prop in user) {
@@ -120,30 +123,22 @@ whoisin.load = function(socket, data, callback) {
 				// }
 			}
 			
-			// sort users
-			whoisin_data.users.sort(function(a,b){
+			for (user in whoisin_data.users){
+				if(whoisin_data.users.hasOwnProperty(user)){
+					var u = whoisin_data.users[user];
+					u.uid = user;
+					sortable.push(u);
+				}
+			}
+			
+			whoisin_data.users = sortable.sort(function(a,b){
 				var an = new Date(a.timestamp),
-				bn = new Date(b.timestamp);
+					bn = new Date(b.timestamp);
 				
-				if(an > bn) {
+				if(an > bn || b.uid == socket.uid) {
 					return 1;
 				}
-				if(an < bn) {
-					return -1;
-				}
-				return 0;
-			});
-			
-			// put the current user in front
-			
-			whoisin_data.users.sort(function(a,b){
-				a = a.uid;
-				b = b.uid;
-				
-				if(a == socket.uid){
-					return 1;
-				}
-				if(b == socket.uid){
+				if(an < bn || a.uid == socket.uid) {
 					return -1;
 				}
 				return 0;
@@ -159,7 +154,7 @@ function renderAdmin(req, res, next) {
 }
 
 whoisin.include = function(id, callback){
-    
+	
   var html = mainTemplate + idInput.replace("{{id}}", id);
 
   if(callback) { callback(null, html); }
