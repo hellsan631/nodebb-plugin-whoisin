@@ -11,7 +11,10 @@
 					<p>
 						To use this plugin in a post just insert <code>[whoisin]</code>
 						anywhere in a post. Here are some other examples of using the shortcode:
-						
+						<ul>
+							<li><code>[whoisin title=(Will you attend this event?) iamin=(Yes I will!)]</code></li>
+							<li><code>[whoisin iamin=(I'm down!)]</code></li>
+						</ul>
 						The shortcode will be replaced by a simple list which users can add
 						themselves to, or remove themselves.
 					</p>
@@ -21,7 +24,7 @@
 							<li>One whoisin widget per post</li>
 							<li>Abbility to add and remove yourself</li>
 							<li>Allows custom title and button name in shortcode</li>
-							<li></li>
+							<li>Automatically subscribe user to the current topic</li>
 						</ul>
 					</p>
 					<p>

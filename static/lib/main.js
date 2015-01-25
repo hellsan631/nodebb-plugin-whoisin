@@ -39,6 +39,7 @@
 				var post_data = {};
 				post_data.url = data.url;
 				post_data.pid = el.getAttribute('data-pid');
+				post_data.tid = data.url.match("topic/([0-9]*)")[1];
 
         // load existing users into whoisin widget
         WhoisinPlugin.load(post_data);
@@ -52,9 +53,19 @@
             action: 'add'
           }, function(err, result) {
             if (err) {
-                // TODO: handle error
+              console.log('Whoisin plugin: error submitting data to backend. ', err);
             } else {
-                WhoisinPlugin.load(post_data);
+              WhoisinPlugin.load(post_data);
+
+							socket.emit('topics.follow', post_data.tid, function(err, result) {
+								if(err) {
+									console.log('Whoisin plugin: could not follow topic. ', err);
+								} else if(!result) {
+									// if result is false, means we unfollow the topic
+									// so we send another request to follow
+									socket.emit('topics.follow', post_data.tid);
+								}
+							});
             }
           });
         });
