@@ -8,6 +8,7 @@
         pid: data.pid
 			}, function(err, whoisin_data) {
 				var participantsDiv = $('div#whoisin-' + data.pid + ' div.participants');
+				var btnWrapper = 	$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper');
 				participantsDiv.html('');
 				for (var i = 0; i < whoisin_data.users.length; i++) {
 					var user = whoisin_data.users[i];
@@ -21,15 +22,15 @@
 				}
 				if (!!whoisin_data.current_user_id) {
 					if (whoisin_data.current_user_is_in) {
-						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamnotin').removeClass('hidden')
-						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamin').addClass('hidden')
+						btnWrapper.children('button.iamnotin').removeClass('hidden')
+						btnWrapper.children('button.iamin').addClass('hidden')
 					} else {
-						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamnotin').addClass('hidden')
-						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamin').removeClass('hidden')
+						btnWrapper.children('button.iamnotin').addClass('hidden')
+						btnWrapper.children('button.iamin').removeClass('hidden')
 					}
 				} else {
-					$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamnotin').addClass('hidden')
-					$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamin').addClass('hidden')
+					btnWrapper.children('button.iamnotin').addClass('hidden')
+					btnWrapper.children('div.whoisin-btn-wrapper button.iamin').addClass('hidden')
 				}
 			});
 		},
@@ -37,9 +38,7 @@
 			$('div.whoisin').each(function(key, el){
 				var post_data = {};
 				post_data.url = data.url;
-				post_data.pid = el.getAttribute('data-pid'); //$('div.whoisin').attr('data-pid');
-
-				console.log('post data is: ', post_data);
+				post_data.pid = el.getAttribute('data-pid');
 
         // load existing users into whoisin widget
         WhoisinPlugin.load(post_data);

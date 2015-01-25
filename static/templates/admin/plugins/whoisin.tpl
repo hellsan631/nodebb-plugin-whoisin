@@ -4,13 +4,26 @@
 			<div class="panel-heading">Who is in? | Admin Page</div>
 			<div class="panel-body">
 				<form role="form" class="whoisin-settings">
+					<h2>About</h2>
+					<p>This plugin provides a casual and easy way to ask users to RSVP
+					or show their interest about a post.</p>
+					<h3>Usage Examples</h3>
 					<p>
-						To use this plugin in a post just ask the question "Who is in?"
-						in a post. The question will be replaced by a simple list
-						which users can add or remove themselves.
+						To use this plugin in a post just insert <code>[whoisin]</code>
+						anywhere in a post. Here are some other examples of using the shortcode:
+						
+						The shortcode will be replaced by a simple list which users can add
+						themselves to, or remove themselves.
 					</p>
-					<div class="alert alert-info">Currently only one whoisin widget can be used in a topic (discussion thread)</div>
-					<br/>
+					<h3>Current Features</h3>
+					<p>
+						<ul>
+							<li>One whoisin widget per post</li>
+							<li>Abbility to add and remove yourself</li>
+							<li>Allows custom title and button name in shortcode</li>
+							<li></li>
+						</ul>
+					</p>
 					<p>
 						If you have a feature request please open an issue on
 						<a href="https://github.com/arasbm/nodebb-plugin-whoisin/issues/new">

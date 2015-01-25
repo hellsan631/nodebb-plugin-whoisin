@@ -1,7 +1,7 @@
 {
 	"id": "nodebb-plugin-whoisin",
 	"name": "whoisin",
-	"description": "Embed a button to RSVP whenever someone asks \"Who is in?\"",
+	"description": "Embed a button to RSVP from inside a post",
 	"url": "https://github.com/arasbm/nodebb-plugin-whoisin",
 	"library": "./library.js",
 	"hooks": [

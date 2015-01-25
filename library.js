@@ -1,8 +1,5 @@
 (function(module) {
 "use strict";
-
-//var USER = require('../../src/user');
-
 var whoisin = {},
 		SocketPlugins = module.parent.require('./socket.io/plugins'),
 		db = module.parent.require('./database'),
@@ -10,12 +7,12 @@ var whoisin = {},
 		user = module.parent.require('./user'),
 		// posts = module.parent.require('./posts'),
 		mainTemplate =
-		'<div id="whoisin-{{postData.pid}}" class="whoisin" data-pid="{{postData.pid}}">' +
-		'  <h4>Who is in?</h4>' +
+		'<div id="whoisin-{postData.pid}" class="whoisin" data-pid="{postData.pid}">' +
+		'  <h4>{title}</h4>' +
 		'	<div class="participants"></div>' +
 		'  <div class="whoisin-btn-wrapper">' +
 		' 	<button title="add yourself to the list" class="iamin btn btn-primary">' +
-		' 		<i class="fa fa-plus"></i> I am in!</button>' +
+		' 		<i class="fa fa-plus"></i> {iamin}</button>' +
 		' 	<button title="remove yourself from this list" class="iamnotin btn btn-danger">' +
 		' 		<i class="fa fa-times"></i></button>' +
 		'	</div>' +
@@ -42,14 +39,30 @@ whoisin.addAdminNavigation = function(header, callback) {
 		icon: 'fa-child',
 		name: 'whoisin'
 	});
-
 	callback(null, header);
 };
 
 whoisin.parse = function(data, callback) {
 	if (data && data.postData && data.postData.content) {
-		data.postData.content = data.postData.content.replace(/Who is in\?/gi,
-			mainTemplate.replace(/\{\{postData.pid\}\}/gi, data.postData.pid));
+		var settings = /(\[whoisin )(.*)(\])/.exec(data.postData.content);
+		var title = "Who is in?";
+		var iamin = "I am in!";
+		if (!!settings && settings.length > 2) {
+			var title_attr = /(title=\()(.*?)(\))/.exec(settings[2]);
+			var iamin_attr = /(iamin=\()(.*?)(\))/.exec(settings[2]);
+			if (title_attr) {
+				title = title_attr[2];
+			}
+			if (iamin_attr) {
+				iamin = iamin_attr[2];
+			}
+		}
+		var tmp =
+			mainTemplate.replace(/\{postData.pid\}/gi, data.postData.pid)
+			.replace(/\{title\}/gi, title)
+			.replace(/\{iamin\}/gi, iamin);
+		data.postData.content =
+		  data.postData.content.replace(/\[whoisin(.*?)\]/gi, tmp);
 	}
 	callback(null, data);
 };
@@ -86,7 +99,6 @@ whoisin.commit = function(socket, data, callback) {
 }
 
 whoisin.load = function(socket, data, callback) {
-	console.log('dataaaaa = ', data );
 	db.getObject('whoisin-post-' + data.pid + '-participants', function(err, participants) {
 		var users_array = [];
 		var whoisin_data = {};
@@ -114,9 +126,6 @@ whoisin.load = function(socket, data, callback) {
 				whoisin_data.users[user.uid].userslug = user.userslug;
 				whoisin_data.users[user.uid].picture = user.picture;
 				whoisin_data.users[user.uid].username = user.username;
-				// for (var prop in user) {
-				// 	whoisin_data.users[user.uid][prop] = user[prop];
-				// }
 			}
 
 			for (user in whoisin_data.users){

@@ -3,15 +3,21 @@ div.whoisin {
 
 	div.participants {
 		float: left;
-		img {
-			width: 1rem;
-			height: 1rem;
-		}
 		img.whoisin-avatar {
-			transition-property: opacity, width, height;
-			transition-duration: 600ms, 600ms;
+			opacity: 0;
+			animation: new-avatar-animation .3s linear forwards;
 			width: 5rem;
 			height: 5rem;
+		}
+		@keyframes new-avatar-animation {
+	    from {
+	        opacity: 0;
+					transform: scale(7,7);
+			}
+	    to {
+	        opacity: 1;
+					transform: scale(1,1);
+	    }
 		}
 	}
 	div.whoisin-btn-wrapper, button.iamin, button.iamnotin {

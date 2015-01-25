@@ -1,7 +1,7 @@
 {
   "name": "nodebb-plugin-whoisin",
   "version": "0.0.4",
-  "description": "A NodeBB plugin to embed a button to RSVP whenever someone asks \"Who is in?\"",
+  "description": "A NodeBB plugin to embed a simple button to RSVP in a post",
   "main": "library.js",
   "repository": {
     "type": "git",
