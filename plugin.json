@@ -2,7 +2,7 @@
 	"id": "nodebb-plugin-whoisin",
 	"name": "whoisin",
 	"description": "Embed a button to RSVP whenever someone asks \"Who is in?\"",
-	"url": "https://github.com/modlab/nodebb-plugin-whoisin",
+	"url": "https://github.com/arasbm/nodebb-plugin-whoisin",
 	"library": "./library.js",
 	"hooks": [
 		{
@@ -12,7 +12,7 @@
 			"hook": "filter:admin.header.build", "method": "addAdminNavigation"
 		},
 		{
-		  "hook": "filter:post.parse", "method": "parse", "callbacked": true
+		  "hook": "filter:parse.post", "method": "parse", "callbacked": true
 		}
 	],
 	"staticDirs": {

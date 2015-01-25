@@ -10,8 +10,7 @@ var whoisin = {},
 		user = module.parent.require('./user'),
 		// posts = module.parent.require('./posts'),
 		mainTemplate =
-		// TODO: get from'/templates/views/main';
-		'<div class="whoisin">' +
+		'<div id="whoisin-{{postData.pid}}" class="whoisin" data-pid="{{postData.pid}}">' +
 		'  <h4>Who is in?</h4>' +
 		'	<div class="participants"></div>' +
 		'  <div class="whoisin-btn-wrapper">' +
@@ -21,17 +20,13 @@ var whoisin = {},
 		' 		<i class="fa fa-times"></i></button>' +
 		'	</div>' +
 		'</div>' +
-		'<br />',
-		  idInput = '<input type="hidden" class="whoisin-id" style="display:none;" value="{{id}}" />';
+		'<br />';
 
-whoisin.init = function(app, middleware, controllers, callback) {
-	console.log('nodebb-plugin-whoisin: loaded');
-	console.log('configs ------------------> ', meta.config);
-
+whoisin.init = function(params, callback) {
 	// We create two routes for every view. One API call, and the actual route itself.
 	// Just add the buildHeader middleware to your route and NodeBB will take care of everything for you.
-	app.get('/admin/plugins/whoisin', middleware.admin.buildHeader, renderAdmin);
-	app.get('/api/admin/plugins/whoisin', renderAdmin);
+	params.router.get('/admin/plugins/whoisin', params.middleware.admin.buildHeader, renderAdmin);
+	params.router.get('/api/admin/plugins/whoisin', renderAdmin);
 
 	SocketPlugins.whoisin = {
 		commit: whoisin.commit,
@@ -51,15 +46,17 @@ whoisin.addAdminNavigation = function(header, callback) {
 	callback(null, header);
 };
 
-whoisin.parse = function(postContent, callback) {
-		postContent = postContent.replace(/Who is in\?/gi, mainTemplate);
-		callback(null, postContent);
+whoisin.parse = function(data, callback) {
+	if (data && data.postData && data.postData.content) {
+		data.postData.content = data.postData.content.replace(/Who is in\?/gi,
+			mainTemplate.replace(/\{\{postData.pid\}\}/gi, data.postData.pid));
+	}
+	callback(null, data);
 };
 
 whoisin.commit = function(socket, data, callback) {
 	if (socket.hasOwnProperty('uid') && socket.uid > 0) {
-		var topicid = data.id || data.url.match("topic/([0-9]*)")[1];
-		db.getObject('whoisin-post-' + topicid + '-participants', function(err, whoisin_participants) {
+		db.getObject('whoisin-post-' + data.pid + '-participants', function(err, whoisin_participants) {
 			if (err) {
 				console.log('whoisin plugin: noone is in');
 			}
@@ -75,7 +72,7 @@ whoisin.commit = function(socket, data, callback) {
 			//serialize
 			whoisin_participants[socket.uid] = JSON.stringify(whoisin_participants[socket.uid]);
 
-			db.setObject('whoisin-post-' + topicid + '-participants', whoisin_participants, function(err){
+			db.setObject('whoisin-post-' + data.pid + '-participants', whoisin_participants, function(err){
 				if (err) {
 					console.log('Whoisin Plugin: Error saving to db, ', err);
 				} else {
@@ -89,9 +86,8 @@ whoisin.commit = function(socket, data, callback) {
 }
 
 whoisin.load = function(socket, data, callback) {
-	var topicid = data.id || data.url.match("topic/([0-9]*)")[1];
-
-	db.getObject('whoisin-post-' + topicid + '-participants', function(err, participants) {
+	console.log('dataaaaa = ', data );
+	db.getObject('whoisin-post-' + data.pid + '-participants', function(err, participants) {
 		var users_array = [];
 		var whoisin_data = {};
 		if (err) {
@@ -111,9 +107,8 @@ whoisin.load = function(socket, data, callback) {
 		}
 		user.getMultipleUserFields(users_array, ['username', 'userslug', 'picture', 'uid'], function(err, users_data) {
 			// Add user data to whoisin data
-			
 			var sortable = [], user;
-			
+
 			for (var id in users_data) {
 				user = users_data[id];
 				whoisin_data.users[user.uid].userslug = user.userslug;
@@ -123,7 +118,7 @@ whoisin.load = function(socket, data, callback) {
 				// 	whoisin_data.users[user.uid][prop] = user[prop];
 				// }
 			}
-			
+
 			for (user in whoisin_data.users){
 				if(whoisin_data.users.hasOwnProperty(user)){
 					var u = whoisin_data.users[user];
@@ -131,11 +126,11 @@ whoisin.load = function(socket, data, callback) {
 					sortable.push(u);
 				}
 			}
-			
+
 			whoisin_data.users = sortable.sort(function(a,b){
 				var an = new Date(a.timestamp),
 					bn = new Date(b.timestamp);
-				
+
 				if(an > bn || b.uid == socket.uid) {
 					return 1;
 				}
@@ -144,7 +139,7 @@ whoisin.load = function(socket, data, callback) {
 				}
 				return 0;
 			});
-			
+
 			callback(null, whoisin_data);
 		});
 	});
@@ -154,15 +149,6 @@ function renderAdmin(req, res, next) {
 	res.render('admin/plugins/whoisin', {});
 }
 
-whoisin.include = function(id, callback){
-	
-  var html = mainTemplate + idInput.replace("{{id}}", id);
-
-  if(callback) { callback(null, html); }
-
-  return html;
-}
-  
 module.exports = whoisin;
 
 }(module));

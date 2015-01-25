@@ -2,13 +2,12 @@
 	"use strict";
 
 	window.WhoisinPlugin = {
-        id: "",
 		load: function(data) {
 			socket.emit('plugins.whoisin.load', {
 				url: data.url,
-                id: WhoisinPlugin.id
+        pid: data.pid
 			}, function(err, whoisin_data) {
-				var participantsDiv = $('div.participants');
+				var participantsDiv = $('div#whoisin-' + data.pid + ' div.participants');
 				participantsDiv.html('');
 				for (var i = 0; i < whoisin_data.users.length; i++) {
 					var user = whoisin_data.users[i];
@@ -22,73 +21,79 @@
 				}
 				if (!!whoisin_data.current_user_id) {
 					if (whoisin_data.current_user_is_in) {
-						$('div.whoisin-btn-wrapper button.iamnotin').removeClass('hidden')
-						$('div.whoisin-btn-wrapper button.iamin').addClass('hidden')
+						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamnotin').removeClass('hidden')
+						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamin').addClass('hidden')
 					} else {
-						$('div.whoisin-btn-wrapper button.iamnotin').addClass('hidden')
-						$('div.whoisin-btn-wrapper button.iamin').removeClass('hidden')
+						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamnotin').addClass('hidden')
+						$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamin').removeClass('hidden')
 					}
 				} else {
-					$('div.whoisin-btn-wrapper button.iamnotin').addClass('hidden')
-					$('div.whoisin-btn-wrapper button.iamin').addClass('hidden')
+					$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamnotin').addClass('hidden')
+					$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper button.iamin').addClass('hidden')
 				}
 			});
 		},
-        setup: function(ev, data) {
-            data = data || {};
-            data.id = WhoisinPlugin.id = $(".whoisin-id").val();
-            if (data.id || /^topic\/[\d]+/.test(data.url)) {
-                // load existing users into whoisin widget
-                WhoisinPlugin.load(data);
-                // add currently logged in user when iamin button is tapped
-                $('div.whoisin-btn-wrapper button.iamin').on('click', function(e) {
-                    socket.emit('plugins.whoisin.commit', {
-                        url: data.url,
-                        id: data.id,
-                        action: 'add'
-                    }, function(err, result) {
-                        if (err) {
-                            // TODO: handle error
-                        } else {
-                            WhoisinPlugin.load(data);
-                        }
-                    });
-                });
+    setup: function(ev, data) {
+			$('div.whoisin').each(function(key, el){
+				var post_data = {};
+				post_data.url = data.url;
+				post_data.pid = el.getAttribute('data-pid'); //$('div.whoisin').attr('data-pid');
 
-                // remove the current user from the whois in list
-                $('div.whoisin-btn-wrapper button.iamnotin').on('click', function(e) {
-                    bootbox.dialog({
-                    message: "You are about to remove yourself from the list",
-                    title: "You are no longer in?",
-                        buttons: {
-                            danger: {
-                                label: "Remove me!",
-                                className: "btn-danger",
-                                callback: function() {
-                                    socket.emit('plugins.whoisin.commit', {
-                                        url: data.url,
-                                        id: data.id,
-                                        action: 'remove'
-                                    }, function(err, result) {
-                                        if (err) {
-                                            // TODO: handle error
-                                        } else {
-                                            WhoisinPlugin.load(data);
-                                        }
-                                    });
-                                }
-                            },
-                            main: {
-                                label: "Cancel",
-                                className: "btn-primary",
-                                callback: function() {}
-                            }
-                        }
-                    });
+				console.log('post data is: ', post_data);
 
-                });
+        // load existing users into whoisin widget
+        WhoisinPlugin.load(post_data);
+
+        // add currently logged in user when iamin button is tapped
+        $('div#whoisin-' + post_data.pid +
+				  ' div.whoisin-btn-wrapper button.iamin').on('click', function(e) {
+          socket.emit('plugins.whoisin.commit', {
+            url: post_data.url,
+            pid: post_data.pid,
+            action: 'add'
+          }, function(err, result) {
+            if (err) {
+                // TODO: handle error
+            } else {
+                WhoisinPlugin.load(post_data);
             }
-       }
+          });
+        });
+
+        // remove the current user from the whois in list
+        $('div#whoisin-' + post_data.pid +
+				  ' div.whoisin-btn-wrapper button.iamnotin').on('click', function(e) {
+          bootbox.dialog({
+          message: "You are about to remove yourself from the list",
+          title: "You are no longer in?",
+            buttons: {
+              danger: {
+                label: "Remove me!",
+                className: "btn-danger",
+                callback: function() {
+                  socket.emit('plugins.whoisin.commit', {
+                    url: post_data.url,
+                    pid: post_data.pid,
+                    action: 'remove'
+                  }, function(err, result) {
+                    if (err) {
+                        // TODO: handle error
+                    } else {
+                        WhoisinPlugin.load(post_data);
+                    }
+                  });
+                }
+              },
+              main: {
+                label: "Cancel",
+                className: "btn-primary",
+                callback: function() {}
+              }
+            }
+          });
+        });
+      });
+    }
 	};
 
 	$(window).on('action:ajaxify.end', WhoisinPlugin.setup);

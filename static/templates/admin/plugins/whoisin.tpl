@@ -13,7 +13,7 @@
 					<br/>
 					<p>
 						If you have a feature request please open an issue on
-						<a href="https://github.com/modlabca/nodebb-plugin-whoisin/issues/new">
+						<a href="https://github.com/arasbm/nodebb-plugin-whoisin/issues/new">
 							the github repository
 						</a> of this plugin.
 					</p>
