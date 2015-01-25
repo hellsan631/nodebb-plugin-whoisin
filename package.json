@@ -15,13 +15,13 @@
     "invitation",
     "respond"
   ],
-  "author": {
-    "name": "Aras Balali Moghaddam",
-    "email": "arasbm@gmail.com"
-  },
+  "author": "Aras Balali Moghaddam <arasbm@gmail.com>",
   "license": "GPLv3",
   "bugs": {
     "url": "https://github.com/arasbm/nodebb-plugin-whoisin/issues"
   },
-  "readmeFilename": "README.md"
+  "homepage": "https://github.com/arasbm/nodebb-plugin-whoisin",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
