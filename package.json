@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-whoisin",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A NodeBB plugin to embed a simple button to RSVP in a post",
   "main": "library.js",
   "repository": {

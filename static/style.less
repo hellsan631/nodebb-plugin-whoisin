@@ -5,19 +5,41 @@ div.whoisin {
 		float: left;
 		img.whoisin-avatar {
 			opacity: 0;
+			-webkit-animation: new-avatar-animation .3s linear forwards;
+      -ms-animation: new-avatar-animation .3s linear forwards;
 			animation: new-avatar-animation .3s linear forwards;
 			width: 5rem;
 			height: 5rem;
 		}
-		@keyframes new-avatar-animation {
-	    from {
-	        opacity: 0;
+		@-webkit-keyframes new-avatar-animation {
+			from {
+					opacity: 0;
 					transform: scale(7,7);
 			}
-	    to {
-	        opacity: 1;
+			to {
+					opacity: 1;
 					transform: scale(1,1);
-	    }
+			}
+		}
+		@-ms-keyframes new-avatar-animation {
+			from {
+					opacity: 0;
+					transform: scale(7,7);
+			}
+			to {
+					opacity: 1;
+					transform: scale(1,1);
+			}
+		}
+		@keyframes new-avatar-animation {
+			from {
+					opacity: 0;
+					transform: scale(7,7);
+			}
+			to {
+					opacity: 1;
+					transform: scale(1,1);
+			}
 		}
 	}
 	div.whoisin-btn-wrapper, button.iamin, button.iamnotin {
