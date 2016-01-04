@@ -14,10 +14,10 @@
 					var user = whoisin_data.users[i];
 					if (user.isin) {
 						participantsDiv.append(
-							'<a href="/user/' + user.userslug + '">' +
+							'<a class="whoisin-avatar-fix" href="/user/' + user.userslug + '">' +
 							'<img data-original-title="' + user.username + '" src="' +
 							user.picture + '" alt="' + user.username + '" class="whoisin-avatar"' +
-							' title=""><br/>' + user.username + '</a>');
+							' title="">' + user.username + '</a>');
 					}
 				}
 				if (!!whoisin_data.current_user_id) {

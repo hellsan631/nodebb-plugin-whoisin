@@ -3,6 +3,11 @@ div.whoisin {
 
 	div.participants {
 		float: left;
+		a.whoisin-avatar-fix {
+			display:inline-block;
+			text-align:center;
+			padding: 0.7em;
+		}
 		img.whoisin-avatar {
 			opacity: 0;
 			-webkit-animation: new-avatar-animation .3s linear forwards;
@@ -10,6 +15,8 @@ div.whoisin {
 			animation: new-avatar-animation .3s linear forwards;
 			width: 5rem;
 			height: 5rem;
+			display: block;
+			margin: auto;
 		}
 		@-webkit-keyframes new-avatar-animation {
 			from {
