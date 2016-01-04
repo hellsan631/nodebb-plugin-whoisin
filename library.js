@@ -101,7 +101,6 @@ whoisin.commit = function(socket, data, callback) {
 				return callback(e);
 			}
 
-
 			//serialize
 			participants[socket.uid] = JSON.stringify(participants[socket.uid]);
 

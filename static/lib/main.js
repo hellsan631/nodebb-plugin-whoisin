@@ -17,20 +17,20 @@
 							'<a href="/user/' + user.userslug + '">' +
 							'<img data-original-title="' + user.username + '" src="' +
 							user.picture + '" alt="' + user.username + '" class="whoisin-avatar"' +
-							' title=""></a>');
+							' title=""><br/>' + user.username + '</a>');
 					}
 				}
 				if (!!whoisin_data.current_user_id) {
 					if (whoisin_data.current_user_is_in) {
-						btnWrapper.children('button.iamnotin').removeClass('hidden')
-						btnWrapper.children('button.iamin').addClass('hidden')
+						btnWrapper.children('button.iamnotin').removeClass('hidden');
+						btnWrapper.children('button.iamin').addClass('hidden');
 					} else {
-						btnWrapper.children('button.iamnotin').addClass('hidden')
-						btnWrapper.children('button.iamin').removeClass('hidden')
+						btnWrapper.children('button.iamnotin').addClass('hidden');
+						btnWrapper.children('button.iamin').removeClass('hidden');
 					}
 				} else {
-					btnWrapper.children('button.iamnotin').addClass('hidden')
-					btnWrapper.children('div.whoisin-btn-wrapper button.iamin').addClass('hidden')
+					btnWrapper.children('button.iamnotin').addClass('hidden');
+					btnWrapper.children('div.whoisin-btn-wrapper button.iamin').addClass('hidden');
 				}
 			});
 		},
