@@ -10,6 +10,7 @@
 				var participantsDiv = $('div#whoisin-' + data.pid + ' div.participants');
 				var btnWrapper = 	$('div#whoisin-' + data.pid + ' div.whoisin-btn-wrapper');
 				participantsDiv.html('');
+				var usersCount = 0;
 				for (var i = 0; i < whoisin_data.users.length; i++) {
 					var user = whoisin_data.users[i];
 					if (user.isin) {
@@ -18,11 +19,13 @@
 							'<img data-original-title="' + user.username + '" src="' +
 							user.picture + '" alt="' + user.username + '" class="whoisin-avatar"' +
 							' title="">' + user.username + '</a>');
+
+						usersCount++;
 					}
 				}
 
 				participantsDiv.append('<br>');
-				participantsDiv.append('Users Attending: ' + whoisin_data.users.length);
+				participantsDiv.append('Users Attending: ' + usersCount);
 				participantsDiv.append('<br>');
 				participantsDiv.append('<br>');
 
