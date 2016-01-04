@@ -73,30 +73,48 @@ whoisin.commit = function(socket, data, callback) {
 			if (err) {
 				console.log('whoisin plugin: noone is in');
 			}
-			whoisin_participants = whoisin_participants || {};
-			if (data.action === 'add') {
-				whoisin_participants[socket.uid] = {
-					isin: true,
-					timestamp: new Date()
-				};
-			} else if (data.action === 'remove' && whoisin_participants[socket.uid]) {
-				whoisin_participants[socket.uid].isin = false;
-			}
-			//serialize
-			whoisin_participants[socket.uid] = JSON.stringify(whoisin_participants[socket.uid]);
 
-			db.setObject('whoisin-post-' + data.pid + '-participants', whoisin_participants, function(err){
-				if (err) {
-					console.log('Whoisin Plugin: Error saving to db, ', err);
-				} else {
-					callback(null, "success");
+			whoisin_participants = whoisin_participants || {};
+
+			var participants;
+
+			if(typeof whoisin_participants === 'string') {
+				whoisin_participants = JSON.parse(whoisin_participants);
+			}
+
+			participants = JSON.parse(JSON.stringify(whoisin_participants));
+
+			try {
+				if (data.action === 'add') {
+					participants[socket.uid] = {
+						isin: true,
+						timestamp: new Date()
+					};
+				} else if (data.action === 'remove' && participants[socket.uid]) {
+					participants[socket.uid] = {
+						isin: false,
+						timestamp: participants[socket.uid].timestamp
+					};
 				}
+			} catch(e) {
+				console.error('an error setting participants occured', e);
+				return callback(e);
+			}
+
+
+			//serialize
+			participants[socket.uid] = JSON.stringify(participants[socket.uid]);
+
+			db.setObject('whoisin-post-' + data.pid + '-participants', participants, function(err){
+				if (err) {
+					return console.log('Whoisin Plugin: Error saving to db, ', err);
+				} callback(null, 'success');
 			});
 		});
 	} else {
 		callback(new Error('not-logged-in'));
 	}
-}
+};
 
 whoisin.load = function(socket, data, callback) {
 	db.getObject('whoisin-post-' + data.pid + '-participants', function(err, participants) {
@@ -117,7 +135,7 @@ whoisin.load = function(socket, data, callback) {
 				whoisin_data.current_user_is_in = true;
 			}
 		}
-		user.getMultipleUserFields(users_array, ['username', 'userslug', 'picture', 'uid'], function(err, users_data) {
+		user.getUsersFields(users_array, ['username', 'userslug', 'picture', 'uid'], function(err, users_data) {
 			// Add user data to whoisin data
 			var sortable = [], user;
 
@@ -152,7 +170,7 @@ whoisin.load = function(socket, data, callback) {
 			callback(null, whoisin_data);
 		});
 	});
-}
+};
 
 function renderAdmin(req, res, next) {
 	res.render('admin/plugins/whoisin', {});
