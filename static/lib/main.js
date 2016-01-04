@@ -20,6 +20,12 @@
 							' title="">' + user.username + '</a>');
 					}
 				}
+
+				participantsDiv.append('<br>');
+				participantsDiv.append('Users Attending: ' + whoisin_data.users.length);
+				participantsDiv.append('<br>');
+				participantsDiv.append('<br>');
+
 				if (!!whoisin_data.current_user_id) {
 					if (whoisin_data.current_user_is_in) {
 						btnWrapper.children('button.iamnotin').removeClass('hidden');
